@@ -1,3 +1,3 @@
-# Cultivating Ineer Growth | Ishita Pandya
+# Cultivating Inner Growth | Ishita Pandya
 
 https://cultivatinginnergrowth.com/
