@@ -792,7 +792,6 @@
         window.onload = function() {
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
-                document.getElementById("contact-form").reset();
                 emailjs.sendForm('service_2mwsl4o', 'template_nwd3lmp', this)
                     .then(function() {
                           new Notify({
@@ -810,6 +809,7 @@
                             type: 1,
                             position: 'right top'
                           });
+                          document.getElementById("contact-form").reset();
                     }, function(error) {
                       new Notify({
                             status: 'error',
@@ -826,7 +826,10 @@
                             type: 1,
                             position: 'right top'
                           });
+                          document.getElementById("contact-form").reset();
                     });
+                    
+ 
             });
         }
     </script>
