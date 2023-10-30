@@ -852,6 +852,7 @@
         window.onload = function() {
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
+                document.getElementById("contact-form").reset();
                 emailjs.sendForm('service_2mwsl4o', 'template_nwd3lmp', this)
                     .then(function() {
                           new Notify({
