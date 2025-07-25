@@ -21,13 +21,13 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload site artifact
+      - name: Upload site files
         uses: actions/upload-pages-artifact@v2
         with:
-          path: '.'
+          path: '.'  # All site files are at root
           exclude: |
             .git/
             .github/
