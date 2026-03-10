@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jay Joshi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #03040a;
+      --star-color: #ffffff;
+      --accent: #7eb8f7;
+      --accent2: #c49fff;
+      --text: #cdd6f4;
+      --muted: #6c7086;
+      --glow: rgba(126, 184, 247, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS STARS ── */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── NEBULA BLOBS ── */
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 20s ease-in-out infinite alternate;
+    }
+    .nebula-1 { width: 600px; height: 600px; background: #3b5bdb; top: -100px; left: -150px; animation-delay: 0s; }
+    .nebula-2 { width: 500px; height: 500px; background: #862e9c; bottom: 0; right: -100px; animation-delay: -7s; }
+    .nebula-3 { width: 300px; height: 300px; background: #1864ab; top: 40%; left: 40%; animation-delay: -13s; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.08); }
+    }
+
+    /* ── LAYOUT ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 0 4rem;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+      margin-bottom: 1.8rem;
+    }
+
+    .eyebrow::before { content: '> '; color: var(--accent2); }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #eef0fb;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+
+    .hero-name span {
+      display: block;
+      font-style: italic;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      margin-top: 2rem;
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: var(--muted);
+      max-width: 480px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.7s;
+    }
+
+    .hero-tagline em {
+      color: var(--text);
+      font-style: normal;
+    }
+
+    .scroll-hint {
+      margin-top: 4rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 1.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .scroll-hint::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--muted);
+      animation: lineGrow 1s ease forwards 1.4s;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    @keyframes lineGrow { to { transform: scaleX(1); } }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+      margin: 0 auto 4rem;
+      opacity: 0.5;
+    }
+
+    /* ── INTERESTS ── */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    .interests {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.05);
+      margin-bottom: 6rem;
+    }
+
+    .interest-card {
+      background: rgba(3, 4, 10, 0.9);
+      padding: 2rem;
+      transition: background 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interest-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--glow);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .interest-card:hover::before { opacity: 1; }
+
+    .interest-icon {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      display: block;
+      filter: grayscale(0.3);
+    }
+
+    .interest-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #eef0fb;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    .interest-desc {
+      font-size: 0.7rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      padding-bottom: 8rem;
+    }
+
+    .about-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      font-weight: 300;
+      line-height: 1.9;
+      color: #a6adc8;
+      max-width: 600px;
+    }
+
+    .about-text strong {
+      color: #eef0fb;
+      font-weight: 400;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    footer span { color: var(--accent2); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── CURSOR DOT ── */
+    .cursor {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease;
+      mix-blend-mode: screen;
+    }
+
+    @media (max-width: 560px) {
+      .interests { grid-template-columns: 1fr; }
+      .cursor { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<div class="cursor" id="cursor"></div>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Initializing . . .</p>
+    <h1 class="hero-name">
+      Jay<br><span>Joshi</span>
+    </h1>
+    <p class="hero-tagline">
+      <em>Software engineer</em> based in the Bay Area.<br>
+      I build things, host things, break things, and sometimes<br>
+      stay up too late staring at the night sky.
+    </p>
+    <p class="scroll-hint">Explore</p>
+  </section>
+
+  <div class="divider reveal"></div>
+
+  <section class="reveal">
+    <p class="section-label">// interests</p>
+    <div class="interests">
+      <div class="interest-card">
+        <span class="interest-icon">⚙️</span>
+        <h2 class="interest-title">Software Engineering</h2>
+        <p class="interest-desc">Crafting reliable, elegant systems. Obsessed with clean abstractions, good APIs, and software that doesn't get in your way.</p>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🔭</span>
+        <h2 class="interest-title">Astronomy</h2>
+        <p class="interest-desc">The universe is 13.8 billion years old and I find that deeply humbling. Deep sky objects, planetary transits, the occasional meteor shower.</p>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🖥️</span>
+        <h2 class="interest-title">Self-Hosting</h2>
+        <p class="interest-desc">Running a homelab because the cloud is just someone else's computer. Proxmox, Docker, and a suspicious number of Raspberry Pis.</p>
+      </div>
+      <div class="interest-card">
+        <span class="interest-icon">🌐</span>
+        <h2 class="interest-title">Open Source</h2>
+        <p class="interest-desc">Believer in the open internet. Contributing where I can, learning from what others build, and keeping dependencies auditable.</p>
+      </div>
+      <div class="interest-card" style="grid-column: span 2;">
+        <span class="interest-icon">🎮</span>
+        <h2 class="interest-title">Gaming</h2>
+        <p class="interest-desc">A good game is interactive fiction, puzzle design, and systems thinking all at once. Currently exploring indie titles and the occasional sprawling RPG.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about reveal">
+    <p class="section-label">// about</p>
+    <p class="about-text">
+      I'm a <strong>software engineer</strong> living in the Bay Area with a habit of running 
+      too many services on too little hardware. When I'm not writing code or tinkering with 
+      my homelab, I'm outside trying to find a dark enough sky to see the Milky Way — or 
+      failing that, reading about it. I care about <strong>open source software</strong>, 
+      privacy, and tools that respect the people who use them.
+    </p>
+  </section>
+</main>
+
+<footer>
+  <span>Jay Joshi</span> &nbsp;·&nbsp; Bay Area, CA &nbsp;·&nbsp; Somewhere between a terminal and a telescope
+</footer>
+
+<script>
+  // ── STARFIELD ──
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initStars();
+  }
+
+  function initStars() {
+    stars = Array.from({ length: 220 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + 0.2,
+      alpha: Math.random() * 0.7 + 0.1,
+      speed: Math.random() * 0.3 + 0.05,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinkleDir: Math.random() > 0.5 ? 1 : -1,
+    }));
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.alpha += s.twinkleSpeed * s.twinkleDir;
+      if (s.alpha > 0.9 || s.alpha < 0.05) s.twinkleDir *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  drawStars();
+
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX - 3 + 'px';
+    cursor.style.top  = e.clientY - 3 + 'px';
+  });
+</script>
+</body>
+</html>
